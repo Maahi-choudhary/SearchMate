@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-canvas text-body font-sans antialiased;
+    background-color: #0a0a0a;
+    color: #dadbdf;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-ink font-normal;
+  }
+}
+
+@layer components {
+  /* xAI Outline Pill Button */
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 rounded-pill border border-white/20 bg-transparent px-4 py-2 text-sm font-normal text-ink hover:border-white/50 hover:bg-canvas-soft transition-colors duration-150;
+  }
+
+  /* xAI Small Outline Pill Button */
+  .btn-outline-sm {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-pill border border-white/20 bg-transparent px-3 py-1 text-xs font-normal text-ink hover:border-white/50 hover:bg-canvas-soft transition-colors duration-150;
+  }
+
+  /* xAI Primary Polarity-Flipped White Pill Button */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-pill bg-white px-5 py-2 text-sm font-normal text-canvas hover:bg-ink-hover transition-colors duration-150 shadow-none;
+  }
+
+  /* xAI Standard Content Card */
+  .card-xai {
+    @apply bg-canvas-card border border-hairline rounded-sm p-6;
+  }
+
+  /* xAI Monospace Tracked Eyebrow */
+  .eyebrow-mono {
+    @apply font-mono uppercase text-xs tracking-caption-mono text-mute;
+  }
+
+  /* xAI Hairline Divider */
+  .divider-hairline {
+    @apply border-b border-hairline;
+  }
+}
+
+/* Custom dark scrollbars */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+::-webkit-scrollbar-thumb {
+  background: #212327;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #363a3f;
+}
