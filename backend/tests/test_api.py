@@ -171,3 +171,20 @@ def test_groq_provider_schema():
     provider = GroqProvider(api_key="mock_key")
     assert provider.model_name == "llama-3.3-70b-versatile"
     assert "groq.com" in provider.base_url
+
+def test_pdf_service_chunking_and_validation(tmp_path):
+    invalid_file = tmp_path / "test.txt"
+    invalid_file.write_text("Hello world")
+    valid, err = PDFService.validate_file(str(invalid_file))
+    assert not valid
+    assert err == ErrorCodes.INVALID_FILE_TYPE
+
+    pages = [
+        {"page_number": 1, "text": "This is page one text with continuous sentence structure and clean paragraphs."},
+        {"page_number": 2, "text": "This is page two text with additional academic findings and empirical evaluations."}
+    ]
+    chunks = PDFService.chunk_pages(pages, chunk_size=5, overlap=1)
+    assert len(chunks) >= 2
+    assert chunks[0]["page_number"] == 1
+    assert chunks[-1]["page_number"] == 2
+
