@@ -56,7 +56,13 @@ def process_paper_task(paper_id: str, collection_id: str, file_path: str):
         paper = paper_repo.get_by_id(paper_id)
         filename = paper.filename if paper else "document.pdf"
         
-        analysis_data = ai_provider.analyze_paper(full_text, filename)
+        try:
+            analysis_data = ai_provider.analyze_paper(full_text, filename)
+        except Exception as ai_err:
+            logger.warning(f"Primary AI provider failed: {ai_err}. Falling back to HeuristicProvider.")
+            from app.services.ai.heuristic_provider import HeuristicProvider
+            heuristic = HeuristicProvider()
+            analysis_data = heuristic.analyze_paper(full_text, filename)
         
         # Update paper metadata
         paper_repo.update_metadata(

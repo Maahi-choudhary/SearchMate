@@ -99,9 +99,7 @@ def get_collection_overview(collection_id: str, db: Session = Depends(get_db)):
 
     themes = []
     for t in col.themes:
-        p_ids = [pt.paper_id for pt in db.query(t.papers).all()] if hasattr(t, "papers") else []
-        if not p_ids:
-            p_ids = [p.id for p in papers]
+        p_ids = [p.id for p in t.papers] if t.papers else [p.id for p in papers]
         themes.append(ThemeResponse(
             id=t.id,
             name=t.name,

@@ -8,6 +8,7 @@ import { DiscoverPage } from '../pages/DiscoverPage';
 import { QuestionsPage } from '../pages/QuestionsPage';
 import { ResearchGraphView } from '../pages/ResearchGraphView';
 import { ToastContainer } from '../components/Toast';
+import { CitationPreviewDrawer } from '../components/CitationPreviewDrawer';
 import { api } from '../services/api';
 import { X } from 'lucide-react';
 
@@ -21,6 +22,7 @@ export function App() {
   const [showNewModal, setShowNewModal] = useState(false);
   const [newTopicName, setNewTopicName] = useState('');
   const [toasts, setToasts] = useState([]);
+  const [activeCitation, setActiveCitation] = useState(null);
 
   // Toast notification helper
   const addToast = (message, type = 'info', title = null) => {
@@ -186,6 +188,14 @@ export function App() {
       {/* Toast Notifications */}
       <ToastContainer toasts={toasts} onDismiss={removeToast} />
 
+      {/* Citation Evidence Preview Drawer */}
+      <CitationPreviewDrawer
+        citation={activeCitation}
+        isOpen={!!activeCitation}
+        onClose={() => setActiveCitation(null)}
+        onOpenPaper={handleOpenPaper}
+      />
+
       {/* Navigation Header */}
       <Navbar
         activeTab={activeTab}
@@ -243,6 +253,7 @@ export function App() {
           <ResearchGraphView
             collectionId={currentCollection?.id || 'demo'}
             onOpenPaper={handleOpenPaper}
+            onPreviewCitation={setActiveCitation}
           />
         )}
 
@@ -250,6 +261,7 @@ export function App() {
           <DiscoverPage
             insights={overview?.insights || []}
             onOpenPaper={handleOpenPaper}
+            onPreviewCitation={setActiveCitation}
           />
         )}
 
@@ -258,6 +270,7 @@ export function App() {
             collectionId={currentCollection?.id || 'demo'}
             papers={overview?.papers || []}
             onOpenPaper={handleOpenPaper}
+            onPreviewCitation={setActiveCitation}
           />
         )}
       </main>

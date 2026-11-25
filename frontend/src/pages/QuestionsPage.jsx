@@ -3,7 +3,7 @@ import { Send, ArrowUpRight } from 'lucide-react';
 import { api } from '../services/api';
 import { CitationLink } from '../components/CitationLink';
 
-export function QuestionsPage({ collectionId, papers = [], onOpenPaper }) {
+export function QuestionsPage({ collectionId, papers = [], onOpenPaper, onPreviewCitation }) {
   const [question, setQuestion] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [history, setHistory] = useState([
@@ -161,7 +161,7 @@ export function QuestionsPage({ collectionId, papers = [], onOpenPaper }) {
                       paperTitle={cite.paper_title}
                       pageNumber={cite.page_number}
                       excerpt={cite.text_snippet}
-                      onClick={() => onOpenPaper(cite.paper_id)}
+                      onClick={() => onPreviewCitation ? onPreviewCitation(cite) : onOpenPaper(cite.paper_id)}
                     />
                   ))}
                 </div>

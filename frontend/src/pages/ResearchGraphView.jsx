@@ -4,7 +4,7 @@ import { api } from '../services/api';
 import { CitationLink } from '../components/CitationLink';
 import { EmptyState } from '../components/EmptyState';
 
-export function ResearchGraphView({ collectionId, onOpenPaper }) {
+export function ResearchGraphView({ collectionId, onOpenPaper, onPreviewCitation }) {
   const [graphData, setGraphData] = useState({ nodes: [], edges: [] });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
@@ -73,26 +73,30 @@ export function ResearchGraphView({ collectionId, onOpenPaper }) {
     return filteredNodeIds.has(edge.source) && filteredNodeIds.has(edge.target);
   });
 
-  // Calculate clean layout coordinates for nodes on the canvas
+  // Calculate clean layout coordinates for nodes with dynamic auto-centering
+  const CANVAS_WIDTH = 840;
+  const CANVAS_HEIGHT = 500;
   const nodePositions = {};
   const paperNodes = filteredNodes.filter(n => n.type === 'paper');
   const themeNodes = filteredNodes.filter(n => n.type === 'theme');
 
+  // Symmetrically center theme nodes across canvas width
+  const totalThemes = Math.max(themeNodes.length, 1);
+  const themeSpacing = CANVAS_WIDTH / (totalThemes + 1);
   themeNodes.forEach((node, idx) => {
-    const total = Math.max(themeNodes.length, 1);
-    const spacing = 600 / (total + 1);
     nodePositions[node.id] = {
-      x: 120 + (idx + 1) * spacing,
+      x: (idx + 1) * themeSpacing,
       y: 130
     };
   });
 
+  // Symmetrically center paper nodes across canvas width
+  const totalPapers = Math.max(paperNodes.length, 1);
+  const paperSpacing = CANVAS_WIDTH / (totalPapers + 1);
   paperNodes.forEach((node, idx) => {
-    const total = Math.max(paperNodes.length, 1);
-    const spacing = 700 / (total + 1);
     nodePositions[node.id] = {
-      x: 80 + (idx + 1) * spacing,
-      y: 340
+      x: (idx + 1) * paperSpacing,
+      y: 360
     };
   });
 
@@ -263,6 +267,8 @@ export function ResearchGraphView({ collectionId, onOpenPaper }) {
 
                 {/* SVG Visual Canvas */}
                 <svg
+                  viewBox="0 0 840 500"
+                  preserveAspectRatio="xMidYMid meet"
                   className="w-full h-full"
                   style={{
                     transform: `translate(${panOffset.x}px, ${panOffset.y}px) scale(${zoomLevel})`,
@@ -486,12 +492,25 @@ export function ResearchGraphView({ collectionId, onOpenPaper }) {
                         <span className="eyebrow-mono text-[10px] block mb-2">// TRACEABLE EVIDENCE:</span>
                         <div className="space-y-2">
                           {selectedEdge.evidence_refs.map((ev, idx) => (
-                            <div key={idx} className="bg-canvas-soft p-3 rounded-sm border border-hairline text-xs">
+                            <div 
+                              key={idx} 
+                              onClick={() => onPreviewCitation && onPreviewCitation(ev)}
+                              className={`bg-canvas-soft p-3 rounded-sm border border-hairline text-xs ${
+                                onPreviewCitation ? 'cursor-pointer hover:border-white/40 transition-colors' : ''
+                              }`}
+                              title={onPreviewCitation ? "Click to verify excerpt in document drawer" : ""}
+                            >
                               <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-caption-mono text-accent-breeze mb-1">
                                 <span className="truncate max-w-[180px]">{ev.paper_title}</span>
                                 {ev.page_number && <span>P.{ev.page_number}</span>}
                               </div>
                               <p className="text-mute italic text-[11px] font-normal leading-relaxed">"{ev.excerpt}"</p>
+                              {onPreviewCitation && (
+                                <span className="text-[9px] font-mono uppercase tracking-caption-mono text-mute/80 flex items-center gap-1 mt-1.5">
+                                  <span>// VERIFY EXCERPT</span>
+                                  <ArrowUpRight className="w-2.5 h-2.5" />
+                                </span>
+                              )}
                             </div>
                           ))}
                         </div>

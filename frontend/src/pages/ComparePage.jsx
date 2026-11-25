@@ -3,11 +3,40 @@ import { ArrowUpRight } from 'lucide-react';
 import { api } from '../services/api';
 import { EmptyState } from '../components/EmptyState';
 
+function detectBenchmarkDomain(text = '') {
+  const lower = text.toLowerCase();
+  if (/imagenet|cifar|mnist|coco|pascal|vision|image|detection|segmentation|accuracy|top-1|top-5/.test(lower)) {
+    return { name: 'Computer Vision', tag: 'VISION' };
+  }
+  if (/wmt|translation|bleu|rouge|glue|squad|language|nlp|transformer|perplexity|bert|token|text/.test(lower)) {
+    return { name: 'Natural Language Processing', tag: 'NLP' };
+  }
+  if (/atari|gym|mujoco|reinforcement|policy|q-learning|reward|agent/.test(lower)) {
+    return { name: 'Reinforcement Learning', tag: 'RL' };
+  }
+  if (/graph|cora|citeseer|node|gnn|graph convolutional/.test(lower)) {
+    return { name: 'Graph Learning', tag: 'GRAPH' };
+  }
+  if (/speech|audio|librispeech|wer|cer|acoustic/.test(lower)) {
+    return { name: 'Speech / Audio', tag: 'AUDIO' };
+  }
+  return { name: 'General Empirical', tag: 'GENERAL' };
+}
+
 export function ComparePage({ collectionId, papers = [], onOpenPaper, onNotify }) {
   const [selectedIds, setSelectedIds] = useState([]);
   const [compareData, setCompareData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // Detect domain discrepancy across compared corpus
+  const paperDomains = compareData?.papers?.map(p => ({
+    paperId: p.paper_id,
+    domain: detectBenchmarkDomain(`${p.dataset} ${p.methodology} ${(p.findings || []).join(' ')}`)
+  })) || [];
+
+  const uniqueDomains = Array.from(new Set(paperDomains.map(d => d.domain.tag))).filter(d => d !== 'GENERAL');
+  const hasDiscrepancy = uniqueDomains.length > 1;
 
   // Default select first two papers
   useEffect(() => {
@@ -126,6 +155,24 @@ export function ComparePage({ collectionId, papers = [], onOpenPaper, onNotify }
 
       {compareData && !isLoading && (
         <div className="space-y-8">
+          {/* Cross-Domain Benchmark Incompatibility Alert (FR-47 Academic Safeguard) */}
+          {hasDiscrepancy && (
+            <div className="card-xai bg-canvas-soft border-accent-sunset/50">
+              <div className="flex flex-wrap items-center gap-2 mb-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-accent-sunset animate-pulse"></span>
+                <span className="eyebrow-mono text-accent-sunset">
+                  // ACADEMIC SAFEGUARD: CROSS-BENCHMARK DISCREPANCY
+                </span>
+                <span className="font-mono text-[10px] uppercase tracking-caption-mono text-accent-sunset-soft px-2 py-0.5 rounded-pill bg-canvas-card border border-accent-sunset/30">
+                  [NON-COMPARABLE METRIC BASELINES]
+                </span>
+              </div>
+              <p className="text-xs text-body/95 leading-relaxed font-normal">
+                The selected papers evaluate across disparate task domains (<span className="text-ink font-mono uppercase text-[11px]">{uniqueDomains.join(' vs. ')}</span>). Direct empirical metrics (such as classification error rates versus sequence translation BLEU scores) are fundamentally non-comparable. Evaluate these studies based on algorithmic architecture rather than raw numerical metric magnitudes.
+              </p>
+            </div>
+          )}
+
           {/* Side-by-side Hairline Comparison Table (ex-data-table-cell) */}
           <div className="border border-hairline rounded-sm overflow-hidden bg-canvas-card">
             <div className="overflow-x-auto">
@@ -182,15 +229,32 @@ export function ComparePage({ collectionId, papers = [], onOpenPaper, onNotify }
                   {/* Dataset Row */}
                   <tr className="hover:bg-canvas-soft/40 transition-colors">
                     <td className="p-4 font-mono uppercase text-[10px] tracking-caption-mono text-mute bg-canvas-soft/70 sticky left-0 z-10 border-r border-hairline">
-                      DATASET
+                      DATASET / DOMAIN
                     </td>
-                    {compareData.papers.map((p) => (
-                      <td key={p.paper_id} className="p-4 border-r border-hairline last:border-r-0 text-body align-top">
-                        <span className="px-2.5 py-1 rounded-pill bg-canvas-soft border border-hairline text-mute font-mono text-[11px] inline-block">
-                          {p.dataset}
-                        </span>
-                      </td>
-                    ))}
+                    {compareData.papers.map((p) => {
+                      const pDomain = paperDomains.find(d => d.paperId === p.paper_id)?.domain;
+                      return (
+                        <td key={p.paper_id} className="p-4 border-r border-hairline last:border-r-0 text-body align-top">
+                          <div className="space-y-1.5">
+                            {pDomain && pDomain.tag !== 'GENERAL' && (
+                              <div className="flex flex-wrap items-center gap-1.5">
+                                <span className="px-2 py-0.5 rounded-pill bg-canvas-soft border border-white/20 text-accent-breeze font-mono text-[10px] uppercase tracking-caption-mono">
+                                  [{pDomain.tag}]
+                                </span>
+                                {hasDiscrepancy && (
+                                  <span className="px-2 py-0.5 rounded-pill bg-canvas-card border border-accent-sunset/40 text-accent-sunset-soft font-mono text-[9px] uppercase tracking-caption-mono">
+                                    DISPARATE BENCHMARK
+                                  </span>
+                                )}
+                              </div>
+                            )}
+                            <div className="text-xs text-body/90 font-normal">
+                              {p.dataset}
+                            </div>
+                          </div>
+                        </td>
+                      );
+                    })}
                   </tr>
 
                   {/* Findings Row */}

@@ -78,7 +78,12 @@ class RetrievalService:
             )
 
         # Call AI provider with grounded evidence chunks
-        result = ai_provider.answer_question(question=question, evidence_chunks=top_chunks)
+        try:
+            result = ai_provider.answer_question(question=question, evidence_chunks=top_chunks)
+        except Exception as ai_err:
+            from app.services.ai.heuristic_provider import HeuristicProvider
+            heuristic = HeuristicProvider()
+            result = heuristic.answer_question(question=question, evidence_chunks=top_chunks)
         cited_indices = result.get("cited_chunk_indices", [])
 
         citations = []

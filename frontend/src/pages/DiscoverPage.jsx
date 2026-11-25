@@ -3,7 +3,7 @@ import { AlertTriangle, Lightbulb, Compass, ArrowUpRight } from 'lucide-react';
 import { CitationLink } from '../components/CitationLink';
 import { EmptyState } from '../components/EmptyState';
 
-export function DiscoverPage({ insights = [], onOpenPaper }) {
+export function DiscoverPage({ insights = [], onOpenPaper, onPreviewCitation }) {
   const recurringLimitations = insights.filter(i => i.type === 'recurring_limitation');
   const potentialGaps = insights.filter(i => i.type === 'potential_gap');
   const projectIdeas = insights.filter(i => i.type === 'idea');
@@ -89,7 +89,7 @@ export function DiscoverPage({ insights = [], onOpenPaper }) {
                             paperTitle={ev.paper_title}
                             pageNumber={ev.page_number}
                             excerpt={ev.evidence_text}
-                            onClick={() => onOpenPaper(ev.paper_id)}
+                            onClick={() => onPreviewCitation ? onPreviewCitation(ev) : onOpenPaper(ev.paper_id)}
                           />
                         ))}
                       </div>
@@ -147,7 +147,7 @@ export function DiscoverPage({ insights = [], onOpenPaper }) {
                             paperTitle={ev.paper_title}
                             pageNumber={ev.page_number}
                             excerpt={ev.evidence_text}
-                            onClick={() => onOpenPaper(ev.paper_id)}
+                            onClick={() => onPreviewCitation ? onPreviewCitation(ev) : onOpenPaper(ev.paper_id)}
                           />
                         ))}
                       </div>
@@ -204,7 +204,7 @@ export function DiscoverPage({ insights = [], onOpenPaper }) {
                           paperTitle={ev.paper_title}
                           pageNumber={ev.page_number}
                           excerpt={ev.evidence_text}
-                          onClick={() => onOpenPaper(ev.paper_id)}
+                          onClick={() => onPreviewCitation ? onPreviewCitation(ev) : onOpenPaper(ev.paper_id)}
                         />
                       ))}
                     </div>
