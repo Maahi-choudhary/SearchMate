@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ZoomIn, ZoomOut, RotateCcw, Search, List, Network, ArrowUpRight } from 'lucide-react';
+import { ZoomIn, ZoomOut, RotateCcw, Search, List, Network, ArrowUpRight, Share2, Hash } from 'lucide-react';
 import { api } from '../services/api';
 import { CitationLink } from '../components/CitationLink';
 import { EmptyState } from '../components/EmptyState';
@@ -124,69 +124,69 @@ export function ResearchGraphView({ collectionId, onOpenPaper, onPreviewCitation
       {/* Title & View Mode Toggle */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <span className="eyebrow-mono block mb-1">
+          <span className="text-xs font-semibold tracking-wider text-[#00b0f4] uppercase block mb-1">
             // TOPOLOGY PROTOCOL
           </span>
-          <h1 className="text-2xl sm:text-3xl font-normal tracking-[-0.8px] text-ink">
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
             Research Relationship Graph
           </h1>
-          <p className="text-xs text-mute font-mono uppercase tracking-caption-mono-sm mt-1">
+          <p className="text-xs text-white/60 font-mono uppercase mt-1">
             Interactive map of shared topics, methodology overlaps, and paper-to-theme connections
           </p>
         </div>
 
         {/* Graph vs Accessible List Toggle */}
-        <div className="flex items-center bg-canvas-card border border-hairline rounded-pill p-1 self-start sm:self-auto">
+        <div className="flex items-center bg-[#23272a] border border-[#282b54] rounded-full p-1 self-start sm:self-auto shadow-discord-sm">
           <button
             onClick={() => setViewMode('canvas')}
-            className={`px-3 py-1.5 rounded-pill text-xs font-mono uppercase tracking-caption-mono-sm transition duration-150 flex items-center gap-1.5 ${
+            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-150 flex items-center gap-1.5 ${
               viewMode === 'canvas'
-                ? 'bg-canvas-soft text-ink border border-white/20'
-                : 'text-mute hover:text-ink'
+                ? 'bg-[#5865f2] text-white shadow-discord-sm'
+                : 'text-white/60 hover:text-white'
             }`}
           >
-            <Network className="w-3.5 h-3.5" />
+            <Network className="w-4 h-4" />
             Graph Canvas
           </button>
           <button
             onClick={() => setViewMode('list')}
-            className={`px-3 py-1.5 rounded-pill text-xs font-mono uppercase tracking-caption-mono-sm transition duration-150 flex items-center gap-1.5 ${
+            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-150 flex items-center gap-1.5 ${
               viewMode === 'list'
-                ? 'bg-canvas-soft text-ink border border-white/20'
-                : 'text-mute hover:text-ink'
+                ? 'bg-[#5865f2] text-white shadow-discord-sm'
+                : 'text-white/60 hover:text-white'
             }`}
           >
-            <List className="w-3.5 h-3.5" />
+            <List className="w-4 h-4" />
             Accessible List
           </button>
         </div>
       </div>
 
       {/* Toolbar: Search, Filters, Zoom Controls */}
-      <div className="card-xai py-3 mb-6 flex flex-wrap items-center justify-between gap-3">
+      <div className="card-discord py-3 px-4 mb-6 flex flex-wrap items-center justify-between gap-3">
         {/* Left: Search & Filter */}
         <div className="flex flex-wrap items-center gap-3 flex-1 min-w-[280px]">
           <div className="relative flex-1 max-w-xs">
-            <Search className="w-3.5 h-3.5 text-mute absolute left-3.5 top-3" />
+            <Search className="w-4 h-4 text-white/40 absolute left-3.5 top-2.5" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search papers, themes, keywords..."
-              className="w-full text-xs bg-canvas-soft border border-hairline rounded-pill pl-9 pr-3.5 py-1.5 text-ink focus:outline-none focus:border-white/50 font-normal"
+              className="w-full text-xs bg-[#23272a] border border-[#282b54] rounded-full pl-9 pr-3.5 py-2 text-white placeholder-white/40 focus:outline-none focus:border-[#5865f2]"
             />
           </div>
 
           <div className="flex items-center gap-1 text-xs">
-            <span className="eyebrow-mono text-[10px] mr-1">FILTER:</span>
+            <span className="text-[10px] font-semibold text-[#00b0f4] uppercase mr-1">FILTER:</span>
             {['all', 'paper', 'theme'].map((type) => (
               <button
                 key={type}
                 onClick={() => setNodeTypeFilter(type)}
-                className={`px-3 py-1 rounded-pill text-[11px] font-mono uppercase tracking-caption-mono-sm transition duration-150 border ${
+                className={`px-3 py-1 rounded-full text-xs font-medium transition-all duration-150 border ${
                   nodeTypeFilter === type
-                    ? 'border-white bg-white/10 text-ink'
-                    : 'border-hairline bg-canvas-soft text-mute hover:border-white/30 hover:text-ink'
+                    ? 'border-[#5865f2] bg-[#5865f2] text-white shadow-discord-sm'
+                    : 'border-[#282b54] bg-[#23272a] text-white/70 hover:border-[#5865f2] hover:text-white'
                 }`}
               >
                 {type === 'all' ? 'All' : type === 'paper' ? 'Papers' : 'Themes'}
@@ -199,37 +199,37 @@ export function ResearchGraphView({ collectionId, onOpenPaper, onPreviewCitation
         <div className="flex items-center gap-1.5">
           <button
             onClick={() => setZoomLevel(prev => Math.min(prev + 0.15, 1.8))}
-            className="btn-outline-sm p-1.5"
+            className="btn-outline-sm p-2 rounded-lg"
             title="Zoom In"
           >
-            <ZoomIn className="w-3.5 h-3.5" />
+            <ZoomIn className="w-4 h-4" />
           </button>
           <button
             onClick={() => setZoomLevel(prev => Math.max(prev - 0.15, 0.6))}
-            className="btn-outline-sm p-1.5"
+            className="btn-outline-sm p-2 rounded-lg"
             title="Zoom Out"
           >
-            <ZoomOut className="w-3.5 h-3.5" />
+            <ZoomOut className="w-4 h-4" />
           </button>
           <button
             onClick={resetView}
-            className="btn-outline-sm px-3 py-1"
+            className="btn-outline-sm px-3 py-1.5 rounded-lg flex items-center gap-1"
             title="Reset Viewport"
           >
-            <RotateCcw className="w-3 h-3 mr-1" />
-            <span className="font-mono uppercase tracking-caption-mono-sm text-[10px]">Reset</span>
+            <RotateCcw className="w-3.5 h-3.5" />
+            <span className="text-xs font-medium">Reset</span>
           </button>
         </div>
       </div>
 
       {isLoading && (
-        <div className="p-12 text-center card-xai animate-pulse text-xs font-mono text-mute">
+        <div className="p-12 text-center card-discord animate-pulse text-xs font-mono text-white/60">
           Constructing topology graph...
         </div>
       )}
 
       {error && (
-        <div className="p-4 card-xai border-accent-sunset text-accent-sunset-soft text-xs rounded-sm my-4 font-mono">
+        <div className="p-4 bg-[#23272a] border border-[#ec48bd]/50 text-[#ec48bd] text-xs rounded-xl my-4 font-mono shadow-discord-card">
           {error}
         </div>
       )}
@@ -248,21 +248,21 @@ export function ResearchGraphView({ collectionId, onOpenPaper, onPreviewCitation
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Canvas Area (2 cols) */}
               <div 
-                className="lg:col-span-2 bg-[#0a0a0a] border border-hairline rounded-sm overflow-hidden relative h-[520px] select-none cursor-grab active:cursor-grabbing"
+                className="lg:col-span-2 bg-[#0a0d3a] border border-[#282b54] rounded-2xl overflow-hidden relative h-[520px] select-none cursor-grab active:cursor-grabbing shadow-discord-card"
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
               >
-                <div className="absolute top-3 left-3 z-10 bg-canvas-card/90 backdrop-blur-sm border border-hairline rounded-pill px-3 py-1 text-[10px] font-mono uppercase tracking-caption-mono text-mute flex items-center gap-3">
+                <div className="absolute top-3 left-3 z-10 bg-[#1e2353]/90 backdrop-blur-md border border-[#282b54] rounded-full px-3.5 py-1.5 text-xs text-white/70 flex items-center gap-3 shadow-discord-sm">
                   <span className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-accent-breeze inline-block"></span>
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#5865f2] inline-block shadow-[0_0_6px_#5865f2]"></span>
                     Paper Node
                   </span>
                   <span className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-accent-dusk inline-block"></span>
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#ec48bd] inline-block shadow-[0_0_6px_#ec48bd]"></span>
                     Theme Node
                   </span>
-                  <span>· Drag to pan · Click for citations</span>
+                  <span className="text-white/40">· Drag to pan · Click to inspect</span>
                 </div>
 
                 {/* SVG Visual Canvas */}
@@ -276,6 +276,14 @@ export function ResearchGraphView({ collectionId, onOpenPaper, onPreviewCitation
                     transition: isDraggingRef.current ? 'none' : 'transform 0.15s ease-out'
                   }}
                 >
+                  {/* Subtle Grid Pattern in Canvas */}
+                  <defs>
+                    <pattern id="discordGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+                      <circle cx="20" cy="20" r="1" fill="#282b54" opacity="0.6" />
+                    </pattern>
+                  </defs>
+                  <rect width="840" height="500" fill="url(#discordGrid)" />
+
                   {/* Render Edges */}
                   {filteredEdges.map((edge) => {
                     const src = nodePositions[edge.source];
@@ -292,30 +300,31 @@ export function ResearchGraphView({ collectionId, onOpenPaper, onPreviewCitation
                           y1={src.y}
                           x2={tgt.x}
                           y2={tgt.y}
-                          stroke={isSelected ? '#ffffff' : isSimilarMethod ? '#7c3aed' : '#212327'}
-                          strokeWidth={isSelected ? 2 : isSimilarMethod ? 1.5 : 1}
-                          strokeDasharray={isSimilarMethod ? '4 3' : 'none'}
-                          className="transition-all hover:stroke-white/80"
+                          stroke={isSelected ? '#35ed7e' : isSimilarMethod ? '#ec48bd' : '#3c4270'}
+                          strokeWidth={isSelected ? 2.5 : isSimilarMethod ? 2 : 1.5}
+                          strokeDasharray={isSimilarMethod ? '5 4' : 'none'}
+                          className="transition-all hover:stroke-[#5865f2]"
                         />
                         {/* Edge Label Badge */}
                         <rect
-                          x={(src.x + tgt.x) / 2 - 42}
-                          y={(src.y + tgt.y) / 2 - 8}
-                          width={84}
-                          height={16}
-                          rx={8}
-                          fill="#191919"
-                          stroke={isSelected ? '#ffffff' : '#212327'}
+                          x={(src.x + tgt.x) / 2 - 46}
+                          y={(src.y + tgt.y) / 2 - 10}
+                          width={92}
+                          height={20}
+                          rx={10}
+                          fill="#23272a"
+                          stroke={isSelected ? '#35ed7e' : '#282b54'}
                           strokeWidth={1}
                         />
                         <text
                           x={(src.x + tgt.x) / 2}
-                          y={(src.y + tgt.y) / 2 + 3}
+                          y={(src.y + tgt.y) / 2 + 4}
                           textAnchor="middle"
-                          fontSize={8}
-                          fontFamily="Geist Mono, monospace"
-                          letterSpacing="0.8px"
-                          fill={isSelected ? '#ffffff' : '#7d8187'}
+                          fontSize={9}
+                          fontWeight="600"
+                          fontFamily="Inter, sans-serif"
+                          letterSpacing="0.5px"
+                          fill={isSelected ? '#35ed7e' : '#00b0f4'}
                         >
                           {edge.label.toUpperCase()}
                         </text>
@@ -344,45 +353,44 @@ export function ResearchGraphView({ collectionId, onOpenPaper, onPreviewCitation
                       >
                         {/* Node Shape */}
                         <circle
-                          r={isPaper ? 26 : 22}
-                          fill="#191919"
-                          stroke={isSelected ? '#ffffff' : isPaper ? '#a0c3ec' : '#7c3aed'}
-                          strokeWidth={isSelected ? 2 : 1.5}
-                          className="transition-transform group-hover:scale-105"
+                          r={isPaper ? 28 : 24}
+                          fill={isPaper ? '#1e2353' : '#23272a'}
+                          stroke={isSelected ? '#ffffff' : isPaper ? '#5865f2' : '#ec48bd'}
+                          strokeWidth={isSelected ? 3 : 2}
+                          className="transition-transform group-hover:scale-110"
                         />
 
                         {/* Node Center Label */}
                         <text
                           textAnchor="middle"
-                          dy=".3em"
-                          fontSize={10}
-                          fontFamily="Geist Mono, monospace"
-                          fontWeight="400"
-                          letterSpacing="1px"
-                          fill={isSelected ? '#ffffff' : isPaper ? '#a0c3ec' : '#c4b5fd'}
+                          dy=".35em"
+                          fontSize={11}
+                          fontFamily="Inter, sans-serif"
+                          fontWeight="700"
+                          fill={isSelected ? '#ffffff' : isPaper ? '#5865f2' : '#ec48bd'}
                         >
                           {isPaper ? 'PDF' : 'THM'}
                         </text>
 
                         {/* Node Label Below */}
                         <rect
-                          x={-80}
-                          y={32}
-                          width={160}
-                          height={20}
-                          rx={4}
-                          fill="#191919"
-                          stroke={isSelected ? '#ffffff' : '#212327'}
+                          x={-85}
+                          y={34}
+                          width={170}
+                          height={22}
+                          rx={6}
+                          fill="#23272a"
+                          stroke={isSelected ? '#ffffff' : '#282b54'}
                           strokeWidth={1}
                         />
                         <text
                           x={0}
-                          y={45}
+                          y={49}
                           textAnchor="middle"
-                          fontSize={9}
+                          fontSize={10}
                           fontFamily="Inter, sans-serif"
-                          fontWeight="400"
-                          fill="#dadbdf"
+                          fontWeight="500"
+                          fill="#ffffff"
                           className="pointer-events-none"
                         >
                           {node.label.length > 22 ? node.label.slice(0, 20) + '...' : node.label}
@@ -394,38 +402,42 @@ export function ResearchGraphView({ collectionId, onOpenPaper, onPreviewCitation
               </div>
 
               {/* Right Side Details Panel */}
-              <div className="card-xai flex flex-col justify-between overflow-y-auto max-h-[520px]">
+              <div className="card-discord p-6 flex flex-col justify-between overflow-y-auto max-h-[520px]">
                 {selectedNode && (
                   <div>
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="font-mono uppercase text-[10px] tracking-caption-mono text-white px-2 py-0.5 rounded-pill bg-canvas-soft border border-hairline">
+                      <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                        selectedNode.type === 'paper'
+                          ? 'bg-[#5865f2]/20 text-[#5865f2] border border-[#5865f2]/30'
+                          : 'bg-[#ec48bd]/20 text-[#ec48bd] border border-[#ec48bd]/30'
+                      }`}>
                         {selectedNode.type === 'paper' ? '[DOCUMENT RECORD]' : '[RECURRING THEME]'}
                       </span>
                     </div>
 
-                    <h3 className="text-base font-normal tracking-[-0.4px] text-ink leading-snug">
+                    <h3 className="text-lg font-bold text-white tracking-tight leading-snug">
                       {selectedNode.label}
                     </h3>
 
                     {selectedNode.type === 'paper' ? (
                       <div className="mt-4 space-y-3.5 text-xs">
                         <div>
-                          <span className="eyebrow-mono text-[10px] block mb-1">// AUTHORS & YEAR:</span>
-                          <span className="text-mute font-mono text-[11px]">
+                          <span className="text-[10px] font-semibold text-[#00b0f4] uppercase tracking-wider block mb-1">// AUTHORS & YEAR:</span>
+                          <span className="text-white/60 font-mono text-[11px]">
                             {(selectedNode.metadata?.authors || []).join(', ') || 'Not found'} · {selectedNode.metadata?.publication_year || 'Year not found'}
                           </span>
                         </div>
 
                         <div>
-                          <span className="eyebrow-mono text-[10px] block mb-1">// METHODOLOGY:</span>
-                          <p className="text-body/85 leading-relaxed bg-canvas-soft p-3 rounded-sm border border-hairline font-normal">
+                          <span className="text-[10px] font-semibold text-[#00b0f4] uppercase tracking-wider block mb-1">// METHODOLOGY:</span>
+                          <p className="text-white/80 leading-relaxed bg-[#23272a] p-3 rounded-xl border border-[#282b54] font-normal">
                             {selectedNode.metadata?.methodology || 'Not found in paper'}
                           </p>
                         </div>
 
                         <div>
-                          <span className="eyebrow-mono text-[10px] block mb-1">// DATASET / BENCHMARK:</span>
-                          <span className="font-mono text-mute text-[11px] bg-canvas-soft px-2.5 py-1 rounded-pill border border-hairline inline-block">
+                          <span className="text-[10px] font-semibold text-[#00b0f4] uppercase tracking-wider block mb-1">// DATASET / BENCHMARK:</span>
+                          <span className="font-mono text-white/80 text-[11px] bg-[#23272a] px-3 py-1 rounded-full border border-[#282b54] inline-block">
                             {selectedNode.metadata?.dataset || 'Not found in paper'}
                           </span>
                         </div>
@@ -433,27 +445,27 @@ export function ResearchGraphView({ collectionId, onOpenPaper, onPreviewCitation
                         <div className="pt-2">
                           <button
                             onClick={() => onOpenPaper(selectedNode.metadata?.paper_id)}
-                            className="btn-outline-sm w-full"
+                            className="btn-primary w-full flex items-center justify-center gap-2 text-xs"
                           >
-                            <span className="font-mono uppercase tracking-caption-mono-sm text-[11px]">Open Full Paper Breakdown</span>
-                            <ArrowUpRight className="w-3.5 h-3.5" />
+                            <span>Open Full Paper Breakdown</span>
+                            <ArrowUpRight className="w-4 h-4" />
                           </button>
                         </div>
                       </div>
                     ) : (
                       <div className="mt-4 space-y-3.5 text-xs">
                         <div>
-                          <span className="eyebrow-mono text-[10px] block mb-1">// THEME DESCRIPTION:</span>
-                          <p className="text-body/85 leading-relaxed bg-canvas-soft p-3 rounded-sm border border-hairline font-normal">
+                          <span className="text-[10px] font-semibold text-[#ec48bd] uppercase tracking-wider block mb-1">// THEME DESCRIPTION:</span>
+                          <p className="text-white/80 leading-relaxed bg-[#23272a] p-3 rounded-xl border border-[#282b54] font-normal">
                             {selectedNode.metadata?.description || 'Shared topic synthesized across multiple papers.'}
                           </p>
                         </div>
 
                         <div>
-                          <span className="eyebrow-mono text-[10px] block mb-1">// ASSOCIATED KEYWORDS:</span>
-                          <div className="flex flex-wrap gap-1 mt-1">
+                          <span className="text-[10px] font-semibold text-[#ec48bd] uppercase tracking-wider block mb-1">// ASSOCIATED KEYWORDS:</span>
+                          <div className="flex flex-wrap gap-1.5 mt-1">
                             {(selectedNode.metadata?.keywords || []).map((k, idx) => (
-                              <span key={idx} className="px-2 py-0.5 bg-canvas-soft text-mute rounded-pill text-[10px] font-mono border border-hairline">
+                              <span key={idx} className="px-2.5 py-0.5 bg-[#23272a] text-[#00b0f4] rounded-full text-[10px] font-medium border border-[#282b54]">
                                 #{k}
                               </span>
                             ))}
@@ -461,7 +473,7 @@ export function ResearchGraphView({ collectionId, onOpenPaper, onPreviewCitation
                         </div>
 
                         <div>
-                          <span className="font-mono uppercase text-[10px] tracking-caption-mono text-accent-breeze block">
+                          <span className="text-[11px] font-semibold text-[#35ed7e] uppercase tracking-wider block">
                             // CONNECTS {selectedNode.metadata?.paper_count || 1} PAPERS IN THIS COLLECTION
                           </span>
                         </div>
@@ -473,42 +485,42 @@ export function ResearchGraphView({ collectionId, onOpenPaper, onPreviewCitation
                 {selectedEdge && (
                   <div>
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="font-mono uppercase text-[10px] tracking-caption-mono text-accent-twilight px-2 py-0.5 rounded-pill bg-canvas-soft border border-hairline">
+                      <span className="px-2.5 py-0.5 rounded-full bg-[#35ed7e]/20 text-[#35ed7e] border border-[#35ed7e]/30 text-[10px] font-bold uppercase tracking-wider">
                         [{selectedEdge.label.toUpperCase()}]
                       </span>
                     </div>
 
-                    <h3 className="text-sm font-normal text-ink mb-2">
+                    <h3 className="text-base font-bold text-white mb-2">
                       Relationship Correlation
                     </h3>
 
-                    <p className="text-xs text-body/90 bg-canvas-soft p-3.5 rounded-sm border border-hairline leading-relaxed mb-4 font-normal">
+                    <p className="text-xs text-white/80 bg-[#23272a] p-3.5 rounded-xl border border-[#282b54] leading-relaxed mb-4 font-normal">
                       {selectedEdge.explanation}
                     </p>
 
                     {/* Traceable Evidence References */}
                     {selectedEdge.evidence_refs && selectedEdge.evidence_refs.length > 0 && (
                       <div>
-                        <span className="eyebrow-mono text-[10px] block mb-2">// TRACEABLE EVIDENCE:</span>
+                        <span className="text-[10px] font-semibold text-[#00b0f4] uppercase tracking-wider block mb-2">// TRACEABLE EVIDENCE:</span>
                         <div className="space-y-2">
                           {selectedEdge.evidence_refs.map((ev, idx) => (
                             <div 
                               key={idx} 
                               onClick={() => onPreviewCitation && onPreviewCitation(ev)}
-                              className={`bg-canvas-soft p-3 rounded-sm border border-hairline text-xs ${
-                                onPreviewCitation ? 'cursor-pointer hover:border-white/40 transition-colors' : ''
+                              className={`bg-[#23272a] p-3 rounded-xl border border-[#282b54] text-xs ${
+                                onPreviewCitation ? 'cursor-pointer hover:border-[#5865f2] transition-colors' : ''
                               }`}
                               title={onPreviewCitation ? "Click to verify excerpt in document drawer" : ""}
                             >
-                              <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-caption-mono text-accent-breeze mb-1">
+                              <div className="flex items-center justify-between font-mono text-[10px] uppercase text-[#00b0f4] mb-1 font-semibold">
                                 <span className="truncate max-w-[180px]">{ev.paper_title}</span>
                                 {ev.page_number && <span>P.{ev.page_number}</span>}
                               </div>
-                              <p className="text-mute italic text-[11px] font-normal leading-relaxed">"{ev.excerpt}"</p>
+                              <p className="text-white/70 italic text-[11px] font-normal leading-relaxed">"{ev.excerpt}"</p>
                               {onPreviewCitation && (
-                                <span className="text-[9px] font-mono uppercase tracking-caption-mono text-mute/80 flex items-center gap-1 mt-1.5">
+                                <span className="text-[9px] font-mono uppercase text-[#35ed7e] flex items-center gap-1 mt-1.5 font-semibold">
                                   <span>// VERIFY EXCERPT</span>
-                                  <ArrowUpRight className="w-2.5 h-2.5" />
+                                  <ArrowUpRight className="w-3 h-3" />
                                 </span>
                               )}
                             </div>
@@ -520,7 +532,7 @@ export function ResearchGraphView({ collectionId, onOpenPaper, onPreviewCitation
                 )}
 
                 {!selectedNode && !selectedEdge && (
-                  <div className="text-center text-xs font-mono text-mute my-auto">
+                  <div className="text-center text-xs font-mono text-white/50 my-auto">
                     // CLICK ANY NODE OR CONNECTION TO INSPECT ITS EVIDENCE
                   </div>
                 )}
@@ -528,24 +540,25 @@ export function ResearchGraphView({ collectionId, onOpenPaper, onPreviewCitation
             </div>
           ) : (
             /* Accessible List View Alternative */
-            <div className="card-xai space-y-8">
+            <div className="card-discord p-6 space-y-8">
               <div>
-                <span className="eyebrow-mono block mb-2">
+                <span className="text-xs font-semibold tracking-wider text-[#5865f2] uppercase block mb-2">
                   // 01_DOCUMENT NODES IN CORPUS ({paperNodes.length})
                 </span>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
                   {paperNodes.map((pn) => (
-                    <div key={pn.id} className="bg-canvas-soft border border-hairline rounded-sm p-4 text-xs">
+                    <div key={pn.id} className="bg-[#23272a] border border-[#282b54] rounded-xl p-4 text-xs hover:border-[#5865f2]/50 transition-colors">
                       <div className="flex items-start justify-between gap-2">
-                        <strong className="text-sm font-normal text-ink block">{pn.label}</strong>
+                        <strong className="text-sm font-bold text-white block">{pn.label}</strong>
                         <button
                           onClick={() => onOpenPaper(pn.metadata?.paper_id)}
-                          className="btn-outline-sm text-[10px] py-0.5 px-2"
+                          className="btn-outline-sm text-[10px] py-1 px-2.5 rounded-lg flex items-center gap-1"
                         >
-                          View <ArrowUpRight className="w-3 h-3" />
+                          <span>View</span>
+                          <ArrowUpRight className="w-3 h-3" />
                         </button>
                       </div>
-                      <span className="font-mono uppercase text-[10px] tracking-caption-mono text-mute block mt-2">
+                      <span className="font-mono text-[10px] uppercase tracking-wide text-white/50 block mt-2">
                         YEAR: {pn.metadata?.publication_year || 'NOT FOUND'} · DATASET: {pn.metadata?.dataset || 'NOT FOUND'}
                       </span>
                     </div>
@@ -553,16 +566,16 @@ export function ResearchGraphView({ collectionId, onOpenPaper, onPreviewCitation
                 </div>
               </div>
 
-              <div className="pt-6 border-t border-hairline">
-                <span className="eyebrow-mono block mb-2 text-accent-twilight">
+              <div className="pt-6 border-t border-[#282b54]">
+                <span className="text-xs font-semibold tracking-wider text-[#ec48bd] uppercase block mb-2">
                   // 02_RECURRING THEMES ({themeNodes.length})
                 </span>
                 <div className="space-y-3 mt-3">
                   {themeNodes.map((tn) => (
-                    <div key={tn.id} className="bg-canvas-soft border border-hairline rounded-sm p-4 text-xs">
-                      <strong className="text-sm font-normal text-ink block">{tn.label}</strong>
-                      <p className="text-body/80 mt-1.5 leading-relaxed font-normal">{tn.metadata?.description}</p>
-                      <span className="font-mono uppercase text-[10px] tracking-caption-mono text-mute block mt-2">
+                    <div key={tn.id} className="bg-[#23272a] border border-[#282b54] rounded-xl p-4 text-xs hover:border-[#ec48bd]/50 transition-colors">
+                      <strong className="text-sm font-bold text-white block">{tn.label}</strong>
+                      <p className="text-white/70 mt-1.5 leading-relaxed font-normal">{tn.metadata?.description}</p>
+                      <span className="text-[10px] font-semibold text-[#ec48bd] uppercase tracking-wider block mt-2">
                         // CONNECTS {tn.metadata?.paper_count || 1} PAPERS IN THIS COLLECTION
                       </span>
                     </div>
@@ -570,20 +583,20 @@ export function ResearchGraphView({ collectionId, onOpenPaper, onPreviewCitation
                 </div>
               </div>
 
-              <div className="pt-6 border-t border-hairline">
-                <span className="eyebrow-mono block mb-2 text-accent-sunset">
+              <div className="pt-6 border-t border-[#282b54]">
+                <span className="text-xs font-semibold tracking-wider text-[#35ed7e] uppercase block mb-2">
                   // 03_VERIFIED RELATIONSHIP EDGES ({filteredEdges.length})
                 </span>
                 <div className="space-y-3 mt-3">
                   {filteredEdges.map((edge) => (
-                    <div key={edge.id} className="bg-canvas-soft border border-hairline rounded-sm p-4 text-xs">
+                    <div key={edge.id} className="bg-[#23272a] border border-[#282b54] rounded-xl p-4 text-xs hover:border-[#35ed7e]/50 transition-colors">
                       <div className="flex items-center gap-2 mb-1.5">
-                        <span className="font-mono uppercase text-[10px] tracking-caption-mono px-2 py-0.5 rounded-pill bg-canvas-card border border-hairline text-ink">
+                        <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#35ed7e]/15 border border-[#35ed7e]/30 text-[#35ed7e]">
                           [{edge.label}]
                         </span>
-                        <span className="font-mono text-[10px] text-mute">{edge.type}</span>
+                        <span className="text-[10px] text-white/50 font-mono">{edge.type}</span>
                       </div>
-                      <p className="text-body/85 leading-relaxed font-normal">{edge.explanation}</p>
+                      <p className="text-white/80 leading-relaxed font-normal">{edge.explanation}</p>
                     </div>
                   ))}
                 </div>

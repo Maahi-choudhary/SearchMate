@@ -4,60 +4,76 @@
 
 @layer base {
   body {
-    @apply bg-canvas text-body font-sans antialiased;
-    background-color: #0a0a0a;
+    @apply bg-canvas text-body font-sans antialiased min-h-screen;
+    background-color: #0a0d3a;
+    background-image: 
+      radial-gradient(circle at 10% 15%, rgba(88, 101, 242, 0.16) 0%, transparent 40%),
+      radial-gradient(circle at 90% 85%, rgba(236, 72, 189, 0.12) 0%, transparent 40%),
+      radial-gradient(circle at 50% 50%, rgba(0, 176, 244, 0.05) 0%, transparent 60%);
+    background-attachment: fixed;
     color: #dadbdf;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply text-ink font-normal;
+    @apply text-ink font-bold tracking-tight;
   }
 }
 
 @layer components {
-  /* xAI Outline Pill Button */
-  .btn-outline {
-    @apply inline-flex items-center justify-center gap-2 rounded-pill border border-white/20 bg-transparent px-4 py-2 text-sm font-normal text-ink hover:border-white/50 hover:bg-canvas-soft transition-colors duration-150;
-  }
-
-  /* xAI Small Outline Pill Button */
-  .btn-outline-sm {
-    @apply inline-flex items-center justify-center gap-1.5 rounded-pill border border-white/20 bg-transparent px-3 py-1 text-xs font-normal text-ink hover:border-white/50 hover:bg-canvas-soft transition-colors duration-150;
-  }
-
-  /* xAI Primary Polarity-Flipped White Pill Button */
+  /* Discord Signature Blurple CTA */
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-pill bg-white px-5 py-2 text-sm font-normal text-canvas hover:bg-ink-hover transition-colors duration-150 shadow-none;
+    @apply inline-flex items-center justify-center gap-2 rounded-sm bg-[#5865f2] hover:bg-[#4752c4] text-white px-5 py-2.5 text-sm font-semibold transition-all duration-150 shadow-md active:translate-y-0.5;
   }
 
-  /* xAI Standard Content Card */
-  .card-xai {
-    @apply bg-canvas-card border border-hairline rounded-sm p-6;
+  /* Discord Electric Green High-Intent CTA */
+  .btn-green {
+    @apply inline-flex items-center justify-center gap-2 rounded-sm bg-[#35ed7e] hover:bg-[#2ecc71] text-[#000000] px-5 py-2.5 text-sm font-bold transition-all duration-150 shadow-md active:translate-y-0.5;
   }
 
-  /* xAI Monospace Tracked Eyebrow */
+  /* Discord Translucent Indigo Outline Button */
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 rounded-sm border border-white/10 bg-[#1e2353]/60 hover:bg-[#1e2353] hover:border-[#5865f2] px-4 py-2 text-sm font-medium text-white transition-all duration-150 shadow-sm active:translate-y-0.5;
+  }
+
+  /* Discord Small Outline Button */
+  .btn-outline-sm {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-sm border border-white/10 bg-[#1e2353]/50 hover:bg-[#1e2353] hover:border-[#5865f2] px-3 py-1.5 text-xs font-medium text-white transition-all duration-150 shadow-sm active:translate-y-0.5;
+  }
+
+  /* Discord Surface Card (Raised Indigo / Onyx) */
+  .card-xai, .card-discord {
+    @apply bg-[#1e2353]/70 backdrop-blur-md border border-[#282b54] hover:border-[#5865f2]/50 rounded-xl p-6 transition-all duration-150 shadow-discord-card;
+  }
+
+  /* Discord Energetic Pill Badge */
+  .badge-discord {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-pill text-[11px] font-semibold;
+  }
+
+  /* Discord Channel / Section Eyebrow */
   .eyebrow-mono {
-    @apply font-mono uppercase text-xs tracking-caption-mono text-mute;
+    @apply font-mono uppercase text-xs tracking-wider text-mute font-medium;
   }
 
-  /* xAI Hairline Divider */
+  /* Discord Divider */
   .divider-hairline {
     @apply border-b border-hairline;
   }
 }
 
-/* Custom dark scrollbars */
+/* Discord Custom Scrollbars */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 7px;
+  height: 7px;
 }
 ::-webkit-scrollbar-track {
-  background: #0a0a0a;
+  background: #0a0d3a;
 }
 ::-webkit-scrollbar-thumb {
-  background: #212327;
+  background: #23272a;
   border-radius: 9999px;
+  border: 1px solid #1e2353;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #363a3f;
+  background: #5865f2;
 }

@@ -10,7 +10,7 @@ import { ResearchGraphView } from '../pages/ResearchGraphView';
 import { ToastContainer } from '../components/Toast';
 import { CitationPreviewDrawer } from '../components/CitationPreviewDrawer';
 import { api } from '../services/api';
-import { X } from 'lucide-react';
+import { X, Sparkles } from 'lucide-react';
 
 export function App() {
   const [activeTab, setActiveTab] = useState('landing');
@@ -184,7 +184,7 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-canvas text-body">
+    <div className="min-h-screen flex flex-col bg-[#0a0d3a] text-white">
       {/* Toast Notifications */}
       <ToastContainer toasts={toasts} onDismiss={removeToast} />
 
@@ -276,37 +276,38 @@ export function App() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-canvas border-t border-hairline py-8 mt-16 text-xs text-mute">
+      <footer className="bg-[#0a0d3a]/90 border-t border-[#282b54] py-8 mt-16 text-xs text-white/50">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <span className="font-mono text-ink text-[11px] uppercase tracking-caption-mono">SearchMate //</span>
-            <span className="font-mono text-[11px] uppercase tracking-caption-mono text-mute">Frontier Research Synthesis</span>
+            <span className="font-bold text-white text-xs">SearchMate</span>
+            <span className="text-white/30">•</span>
+            <span className="text-[#00b0f4] text-xs font-medium">Discord Design Language</span>
           </div>
-          <div className="font-mono text-[10px] uppercase tracking-caption-mono text-mute">
-            GROUNDED EVIDENCE · SECTION PARSING · UNIVERSAL SANS + GEIST MONO
+          <div className="font-mono text-[10px] uppercase tracking-wide text-white/40">
+            GROUNDED EVIDENCE · SECTION PARSING · DISCORD BLURPLE PALETTE
           </div>
         </div>
       </footer>
 
-      {/* New Topic Modal (ex-modal-card) */}
+      {/* New Topic Modal */}
       {showNewModal && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="card-xai max-w-md w-full bg-canvas-card border border-hairline rounded-sm p-6 shadow-2xl">
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="max-w-md w-full bg-[#1e2353] border border-[#282b54] rounded-2xl p-6 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <span className="eyebrow-mono block mb-1">// NEW PROTOCOL</span>
-                <h3 className="text-base font-normal tracking-[-0.4px] text-ink">Create Research Topic</h3>
+                <span className="text-xs font-semibold text-[#00b0f4] uppercase tracking-wider block mb-1">// NEW PROTOCOL</span>
+                <h3 className="text-lg font-bold text-white tracking-tight">Create Research Topic</h3>
               </div>
               <button 
                 onClick={() => setShowNewModal(false)} 
-                className="text-mute hover:text-ink p-1 transition-colors"
+                className="text-white/40 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors"
               >
-                <X className="w-4 h-4" />
+                <X className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleCreateTopic}>
-              <label className="block text-xs font-mono uppercase tracking-caption-mono-sm text-mute mb-2">
+              <label className="block text-xs font-medium text-white/70 mb-2">
                 Topic or Course Project Name:
               </label>
               <input
@@ -314,24 +315,24 @@ export function App() {
                 value={newTopicName}
                 onChange={(e) => setNewTopicName(e.target.value)}
                 placeholder="e.g. Graph Neural Networks, Transformer Optimizations"
-                className="w-full text-xs sm:text-sm bg-canvas-soft border border-hairline rounded-sm px-3.5 py-2.5 text-ink focus:outline-none focus:border-white/50 mb-5 font-normal"
+                className="w-full text-xs sm:text-sm bg-[#23272a] border border-[#282b54] rounded-xl px-3.5 py-2.5 text-white placeholder-white/40 focus:outline-none focus:border-[#5865f2] mb-5 font-normal"
                 autoFocus
               />
 
-              <div className="flex justify-end gap-2">
+              <div className="flex justify-end gap-2.5">
                 <button
                   type="button"
                   onClick={() => setShowNewModal(false)}
                   className="btn-outline-sm"
                 >
-                  <span className="font-mono uppercase tracking-caption-mono-sm text-[11px]">Cancel</span>
+                  <span>Cancel</span>
                 </button>
                 <button
                   type="submit"
                   disabled={!newTopicName.trim()}
                   className="btn-primary"
                 >
-                  <span className="font-mono uppercase tracking-caption-mono-sm text-[11px]">Initialize Topic</span>
+                  <span>Initialize Topic</span>
                 </button>
               </div>
             </form>

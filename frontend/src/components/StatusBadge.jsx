@@ -5,8 +5,8 @@ export function StatusBadge({ status, errorCode }) {
   switch (status) {
     case 'completed':
       return (
-        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-pill text-[11px] font-mono uppercase tracking-caption-mono-sm bg-canvas-soft border border-white/20 text-ink">
-          <span className="w-1.5 h-1.5 rounded-full bg-white inline-block"></span>
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill text-[11px] font-bold font-mono uppercase tracking-wider bg-[#35ed7e]/15 border border-[#35ed7e]/40 text-[#35ed7e] shadow-sm">
+          <span className="w-2 h-2 rounded-full bg-[#35ed7e] inline-block shadow-[0_0_8px_#35ed7e]"></span>
           Completed
         </span>
       );
@@ -14,26 +14,26 @@ export function StatusBadge({ status, errorCode }) {
     case 'extracting':
     case 'analysing':
       return (
-        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-pill text-[11px] font-mono uppercase tracking-caption-mono-sm bg-canvas-soft border border-white/30 text-ink">
-          <Loader2 className="w-3 h-3 animate-spin text-accent-breeze" />
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill text-[11px] font-bold font-mono uppercase tracking-wider bg-[#5865f2]/20 border border-[#5865f2]/50 text-white animate-pulse">
+          <Loader2 className="w-3.5 h-3.5 animate-spin text-[#5865f2]" />
           {status}...
         </span>
       );
     case 'failed':
       return (
         <span 
-          className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-pill text-[11px] font-mono uppercase tracking-caption-mono-sm bg-canvas-soft border border-accent-sunset/50 text-accent-sunset-soft"
+          className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill text-[11px] font-bold font-mono uppercase tracking-wider bg-[#ec48bd]/20 border border-[#ec48bd]/50 text-[#ec48bd]"
           title={errorCode || 'Failed'}
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-accent-sunset inline-block"></span>
+          <span className="w-2 h-2 rounded-full bg-[#ec48bd] inline-block shadow-[0_0_8px_#ec48bd]"></span>
           Failed {errorCode ? `[${errorCode}]` : ''}
         </span>
       );
     case 'uploaded':
     default:
       return (
-        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-pill text-[11px] font-mono uppercase tracking-caption-mono-sm bg-canvas-soft border border-hairline text-mute">
-          <span className="w-1.5 h-1.5 rounded-full bg-mute inline-block"></span>
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill text-[11px] font-medium font-mono uppercase tracking-wider bg-[#23272a] border border-[#282b54] text-[#949ba4]">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#949ba4] inline-block"></span>
           Queued
         </span>
       );

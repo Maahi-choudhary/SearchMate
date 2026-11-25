@@ -52,10 +52,10 @@ export function FileUploader({ onUpload, currentPaperCount = 0, maxPapers = 5, i
         onDragLeave={onDragLeave}
         onDrop={onDrop}
         onClick={() => fileInputRef.current?.click()}
-        className={`border rounded-sm p-8 text-center cursor-pointer transition-colors duration-150 ${
+        className={`border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all duration-200 ${
           isDragOver
-            ? 'border-white/60 bg-canvas-soft'
-            : 'border-hairline hover:border-white/30 bg-canvas-card'
+            ? 'border-[#35ed7e] bg-[#35ed7e]/10 shadow-discord-glow'
+            : 'border-[#3c4270] hover:border-[#5865f2] bg-[#1e2353]/50 hover:bg-[#1e2353]/80 shadow-discord-card'
         }`}
       >
         <input
@@ -67,19 +67,19 @@ export function FileUploader({ onUpload, currentPaperCount = 0, maxPapers = 5, i
           disabled={isUploading || currentPaperCount >= maxPapers}
         />
 
-        <div className="mx-auto w-10 h-10 rounded-pill border border-white/20 bg-canvas-soft flex items-center justify-center text-ink mb-3">
-          <Upload className="w-4 h-4 opacity-80" />
+        <div className="mx-auto w-12 h-12 rounded-2xl bg-[#5865f2]/20 border border-[#5865f2]/40 flex items-center justify-center text-[#5865f2] mb-3 shadow-discord-sm transition-transform group-hover:scale-105">
+          <Upload className="w-6 h-6" />
         </div>
 
-        <span className="eyebrow-mono block mb-1.5">
+        <span className="inline-block text-[11px] font-semibold tracking-wider text-[#00b0f4] uppercase mb-1">
           // INGESTION PROTOCOL
         </span>
 
-        <h3 className="text-base font-normal tracking-[-0.4px] text-ink">
+        <h3 className="text-base md:text-lg font-bold text-white tracking-tight">
           {isUploading ? 'Extracting & Parsing PDF Document...' : 'Drop Research Paper PDF Here'}
         </h3>
         
-        <p className="text-[11px] font-mono uppercase tracking-caption-mono-sm text-mute mt-2">
+        <p className="text-xs text-white/60 font-mono mt-1">
           TEXT-BASED PDFS · 10 MB MAX · [{currentPaperCount}/{maxPapers} SLOTS FILLED]
         </p>
 
@@ -87,17 +87,17 @@ export function FileUploader({ onUpload, currentPaperCount = 0, maxPapers = 5, i
           <button
             type="button"
             disabled={isUploading || currentPaperCount >= maxPapers}
-            className="btn-outline-sm"
+            className="btn-primary flex items-center gap-2 text-xs"
           >
-            <FileUp className="w-3.5 h-3.5" />
-            <span className="font-mono uppercase tracking-caption-mono-sm text-[11px]">Select Document</span>
+            <FileUp className="w-4 h-4" />
+            <span>Select Document</span>
           </button>
         </div>
       </div>
 
       {errorMsg && (
-        <div className="mt-3 p-3 bg-canvas-card border border-accent-sunset/40 rounded-sm flex items-center gap-2.5 text-xs text-accent-sunset-soft font-mono">
-          <AlertTriangle className="w-4 h-4 flex-shrink-0 text-accent-sunset" />
+        <div className="mt-3 p-3.5 bg-[#23272a] border border-[#ec48bd]/40 rounded-xl flex items-center gap-2.5 text-xs text-[#ec48bd] font-medium shadow-discord-card">
+          <AlertTriangle className="w-4 h-4 flex-shrink-0 text-[#ec48bd]" />
           <span>{errorMsg}</span>
         </div>
       )}

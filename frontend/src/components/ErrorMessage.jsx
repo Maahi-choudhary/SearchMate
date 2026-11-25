@@ -3,20 +3,20 @@ import { AlertTriangle, RotateCcw } from 'lucide-react';
 
 export function ErrorMessage({ title = 'Error', message, onRetry }) {
   return (
-    <div className="bg-canvas-card border border-accent-sunset/40 rounded-sm p-4 my-4 flex items-start gap-3">
-      <AlertTriangle className="w-4 h-4 text-accent-sunset flex-shrink-0 mt-0.5" />
+    <div className="bg-[#23272a] border border-[#ec48bd]/40 rounded-xl p-4 my-4 flex items-start gap-3 shadow-discord-card">
+      <AlertTriangle className="w-5 h-5 text-[#ec48bd] flex-shrink-0 mt-0.5" />
       <div className="flex-1">
-        <span className="eyebrow-mono text-[10px] text-accent-sunset block mb-1">
+        <span className="text-[10px] font-semibold text-[#ec48bd] uppercase tracking-wider block mb-1">
           // SYSTEM FAULT: {title}
         </span>
-        <p className="text-xs text-body leading-relaxed">{message}</p>
+        <p className="text-xs text-white/80 leading-relaxed font-normal">{message}</p>
         {onRetry && (
           <button
             onClick={onRetry}
-            className="mt-2.5 btn-outline-sm"
+            className="mt-2.5 btn-outline-sm flex items-center gap-1.5"
           >
-            <RotateCcw className="w-3 h-3" />
-            <span className="font-mono uppercase tracking-caption-mono-sm text-[10px]">Retry Operation</span>
+            <RotateCcw className="w-3.5 h-3.5 text-[#ec48bd]" />
+            <span className="text-xs font-medium">Retry Operation</span>
           </button>
         )}
       </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowUpRight, Trash2 } from 'lucide-react';
+import { ArrowUpRight, Trash2, FileText } from 'lucide-react';
 import { StatusBadge } from './StatusBadge';
 
 export function PaperCard({ paper, onOpen, onDelete }) {
@@ -8,7 +8,7 @@ export function PaperCard({ paper, onOpen, onDelete }) {
     : 'Authors not specified';
 
   return (
-    <div className="bg-canvas-card border border-hairline rounded-sm p-5 hover:border-white/30 transition-colors duration-150 flex flex-col justify-between group">
+    <div className="bg-[#1e2353]/70 backdrop-blur-sm border border-[#282b54] rounded-xl p-5 hover:border-[#5865f2]/70 hover:shadow-discord-glow transition-all duration-200 flex flex-col justify-between group">
       <div>
         {/* Top Header: Status & Delete */}
         <div className="flex items-center justify-between mb-3">
@@ -21,44 +21,47 @@ export function PaperCard({ paper, onOpen, onDelete }) {
                   onDelete(paper.id);
                 }
               }}
-              className="text-mute hover:text-white p-1 transition-colors"
+              className="text-white/40 hover:text-[#ec48bd] p-1.5 rounded-lg hover:bg-[#ec48bd]/10 transition-colors"
               title="Remove document"
             >
-              <Trash2 className="w-3.5 h-3.5" />
+              <Trash2 className="w-4 h-4" />
             </button>
           )}
         </div>
 
         {/* Metadata Eyebrow */}
-        <div className="eyebrow-mono text-[10px] mb-1.5 truncate">
-          // {paper.publication_year || 'YEAR NOT FOUND'} · {authorsText}
+        <div className="text-[11px] font-medium text-[#00b0f4] mb-1.5 truncate flex items-center gap-1.5">
+          <span className="opacity-70">#{paper.publication_year || 'YEAR-N/A'}</span>
+          <span className="text-white/30">•</span>
+          <span className="text-white/60 truncate">{authorsText}</span>
         </div>
 
         {/* Title */}
         <h3 
           onClick={onOpen}
-          className="text-base font-normal tracking-[-0.4px] text-ink hover:text-white cursor-pointer line-clamp-2 transition-colors"
+          className="text-base font-semibold text-white group-hover:text-[#5865f2] cursor-pointer line-clamp-2 transition-colors duration-150 leading-snug"
         >
           {paper.title || paper.filename}
         </h3>
 
         {/* Beginner summary or abstract excerpt */}
-        <p className="text-xs text-body/80 mt-3 line-clamp-3 leading-relaxed font-normal">
+        <p className="text-xs text-white/70 mt-3 line-clamp-3 leading-relaxed font-normal">
           {paper.analysis?.beginner_explanation || paper.abstract || 'Document ingestion complete. Initializing analysis...'}
         </p>
       </div>
 
       {/* Footer Open Action */}
-      <div className="mt-5 pt-3.5 border-t border-hairline flex items-center justify-between">
-        <span className="font-mono uppercase text-[10px] tracking-caption-mono text-mute">
-          // {paper.page_count ? `${paper.page_count} PAGES` : 'PDF SOURCE'}
+      <div className="mt-5 pt-3.5 border-t border-[#282b54] flex items-center justify-between">
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#0a0d3a]/70 text-white/50 text-[10px] font-mono border border-[#282b54]">
+          <FileText className="w-3 h-3 text-[#5865f2]" />
+          {paper.page_count ? `${paper.page_count} PAGES` : 'PDF'}
         </span>
         <button
           onClick={onOpen}
-          className="btn-outline-sm group-hover:border-white/60"
+          className="btn-outline-sm group-hover:border-[#5865f2] group-hover:text-white"
         >
-          <span className="font-mono uppercase tracking-caption-mono-sm text-[10px]">Read Analysis</span>
-          <ArrowUpRight className="w-3 h-3 text-mute group-hover:text-ink transition-colors" />
+          <span className="text-xs font-medium">Read Analysis</span>
+          <ArrowUpRight className="w-3.5 h-3.5 text-white/50 group-hover:text-[#5865f2] transition-colors" />
         </button>
       </div>
     </div>
