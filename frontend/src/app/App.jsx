@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Navbar } from '../components/Navbar';
 import { HomePage } from '../pages/HomePage';
 import { WorkspacePage } from '../pages/WorkspacePage';
@@ -7,6 +7,7 @@ import { ComparePage } from '../pages/ComparePage';
 import { DiscoverPage } from '../pages/DiscoverPage';
 import { QuestionsPage } from '../pages/QuestionsPage';
 import { ResearchGraphView } from '../pages/ResearchGraphView';
+import { ToastContainer } from '../components/Toast';
 import { api } from '../services/api';
 import { X } from 'lucide-react';
 
@@ -19,6 +20,25 @@ export function App() {
   const [isUploading, setIsUploading] = useState(false);
   const [showNewModal, setShowNewModal] = useState(false);
   const [newTopicName, setNewTopicName] = useState('');
+  const [toasts, setToasts] = useState([]);
+
+  // Toast notification helper
+  const addToast = (message, type = 'info', title = null) => {
+    const id = Date.now() + Math.random().toString(36).substring(2, 7);
+    const now = new Date();
+    const timestamp = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+    const newToast = { id, message, type, title, timestamp };
+    setToasts((prev) => [...prev, newToast]);
+
+    // Auto-dismiss after 4.5 seconds
+    setTimeout(() => {
+      setToasts((prev) => prev.filter((t) => t.id !== id));
+    }, 4500);
+  };
+
+  const removeToast = (id) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+  };
 
   // Initial load
   useEffect(() => {
@@ -48,12 +68,62 @@ export function App() {
     }
   };
 
+  // Track in-progress papers to detect transitions
+  const prevInProgressRef = useRef(new Set());
+
+  // Automatic live status polling for papers in progress
+  useEffect(() => {
+    if (!currentCollection || !overview?.papers) return;
+
+    const inProgressPapers = overview.papers.filter(
+      (p) => p.status && !['completed', 'failed'].includes(p.status)
+    );
+
+    const currentInProgressIds = new Set(inProgressPapers.map((p) => p.id));
+    prevInProgressRef.current = currentInProgressIds;
+
+    if (inProgressPapers.length === 0) return;
+
+    const intervalId = setInterval(async () => {
+      try {
+        const updatedOv = await api.getCollectionOverview(currentCollection.id);
+        if (updatedOv && updatedOv.papers) {
+          // Detect papers that have transitioned to completed or failed
+          prevInProgressRef.current.forEach((paperId) => {
+            const paper = updatedOv.papers.find((p) => p.id === paperId);
+            if (paper) {
+              if (paper.status === 'completed') {
+                addToast(
+                  `"${paper.title || paper.filename}" analysis complete. Concepts and gap analysis updated.`,
+                  'success',
+                  '// INGESTION COMPLETED'
+                );
+              } else if (paper.status === 'failed') {
+                addToast(
+                  `"${paper.filename}" processing failed (${paper.error_code || 'Extraction error'}).`,
+                  'error',
+                  '// EXTRACTION FAILED'
+                );
+              }
+            }
+          });
+
+          setOverview(updatedOv);
+        }
+      } catch (err) {
+        console.error('Polling status error:', err);
+      }
+    }, 2500);
+
+    return () => clearInterval(intervalId);
+  }, [currentCollection?.id, overview?.papers]);
+
   const handleCreateTopic = async (e) => {
     e.preventDefault();
     if (!newTopicName.trim()) return;
     try {
       const created = await api.createCollection(newTopicName.trim());
-      setCollections(prev => [created, ...prev]);
+      setCollections((prev) => [created, ...prev]);
       setCurrentCollection(created);
       setOverview({
         id: created.id,
@@ -66,8 +136,9 @@ export function App() {
       setShowNewModal(false);
       setNewTopicName('');
       setActiveTab('workspace');
+      addToast(`Topic "${created.name}" initialized.`, 'success', '// TOPIC CREATED');
     } catch (err) {
-      alert('Could not create topic: ' + (err?.message || 'Error'));
+      addToast(err?.message || 'Could not create topic.', 'error', '// ERROR');
     }
   };
 
@@ -76,11 +147,12 @@ export function App() {
     setIsUploading(true);
     try {
       await api.uploadPaper(currentCollection.id, file);
-      // Refresh overview
+      addToast(`Ingesting "${file.name}"... Parsing sections and extracting embeddings.`, 'info', '// INGESTION STARTED');
+      // Refresh overview immediately
       const ov = await api.getCollectionOverview(currentCollection.id);
       setOverview(ov);
     } catch (err) {
-      alert(err?.message || 'Failed to upload paper');
+      addToast(err?.message || 'Failed to upload paper.', 'error', '// UPLOAD FAILED');
     } finally {
       setIsUploading(false);
     }
@@ -92,7 +164,7 @@ export function App() {
       setSelectedPaper(p);
       setActiveTab('paper_detail');
     } catch (err) {
-      console.error('Failed to open paper:', err);
+      addToast('Failed to retrieve paper details.', 'error', '// NOT FOUND');
     }
   };
 
@@ -103,13 +175,17 @@ export function App() {
         const ov = await api.getCollectionOverview(currentCollection.id);
         setOverview(ov);
       }
+      addToast('Paper removed from research corpus.', 'info', '// DELETED');
     } catch (err) {
-      alert('Failed to delete paper');
+      addToast('Failed to delete paper.', 'error', '// DELETE FAILED');
     }
   };
 
   return (
     <div className="min-h-screen flex flex-col bg-canvas text-body">
+      {/* Toast Notifications */}
+      <ToastContainer toasts={toasts} onDismiss={removeToast} />
+
       {/* Navigation Header */}
       <Navbar
         activeTab={activeTab}
@@ -143,6 +219,7 @@ export function App() {
             onDeletePaper={handleDeletePaper}
             onNavigateTab={setActiveTab}
             isUploading={isUploading}
+            onNotify={addToast}
           />
         )}
 
@@ -158,6 +235,7 @@ export function App() {
             collectionId={currentCollection?.id || 'demo'}
             papers={overview?.papers || []}
             onOpenPaper={handleOpenPaper}
+            onNotify={addToast}
           />
         )}
 

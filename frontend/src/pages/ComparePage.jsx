@@ -3,7 +3,7 @@ import { ArrowUpRight } from 'lucide-react';
 import { api } from '../services/api';
 import { EmptyState } from '../components/EmptyState';
 
-export function ComparePage({ collectionId, papers = [], onOpenPaper }) {
+export function ComparePage({ collectionId, papers = [], onOpenPaper, onNotify }) {
   const [selectedIds, setSelectedIds] = useState([]);
   const [compareData, setCompareData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -43,13 +43,21 @@ export function ComparePage({ collectionId, papers = [], onOpenPaper }) {
   const togglePaper = (id) => {
     if (selectedIds.includes(id)) {
       if (selectedIds.length <= 2) {
-        alert('Please keep at least 2 papers selected to compare.');
+        if (onNotify) {
+          onNotify('Please keep at least 2 papers selected to compare.', 'info', '// SELECTION LIMIT');
+        } else {
+          alert('Please keep at least 2 papers selected to compare.');
+        }
         return;
       }
       setSelectedIds(selectedIds.filter(item => item !== id));
     } else {
       if (selectedIds.length >= 5) {
-        alert('You can compare up to 5 papers at a time.');
+        if (onNotify) {
+          onNotify('You can compare up to 5 papers at a time.', 'info', '// MAXIMUM CORPUS');
+        } else {
+          alert('You can compare up to 5 papers at a time.');
+        }
         return;
       }
       setSelectedIds([...selectedIds, id]);

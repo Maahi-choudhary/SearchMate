@@ -12,11 +12,15 @@ export function WorkspacePage({
   onOpenPaper,
   onDeletePaper,
   onNavigateTab,
-  isUploading
+  isUploading,
+  onNotify
 }) {
   const papers = overview?.papers || [];
   const themes = overview?.themes || [];
   const insights = overview?.insights || [];
+  const inProgressCount = papers.filter(
+    (p) => p.status && !['completed', 'failed'].includes(p.status)
+  ).length;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -33,6 +37,12 @@ export function WorkspacePage({
             <p className="text-xs text-body/80 mt-1.5 font-normal">
               Cross-paper relationship synthesis, methodology comparison, and grounded gap discovery.
             </p>
+            {inProgressCount > 0 && (
+              <div className="mt-3 inline-flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/20 rounded-pill text-[11px] font-mono uppercase tracking-caption-mono text-accent-breeze">
+                <span className="w-1.5 h-1.5 rounded-full bg-accent-breeze animate-pulse"></span>
+                <span>{inProgressCount} {inProgressCount === 1 ? 'Paper' : 'Papers'} Ingesting & Analyzing...</span>
+              </div>
+            )}
           </div>
 
           {/* Metric Counters (xAI Mono Eyebrows) */}
@@ -115,6 +125,12 @@ export function WorkspacePage({
               <span className="eyebrow-mono">
                 // ACTIVE CORPUS ({papers.length}/5)
               </span>
+              {inProgressCount > 0 && (
+                <span className="font-mono text-[10px] uppercase tracking-caption-mono text-accent-breeze flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-accent-breeze animate-ping"></span>
+                  Processing {inProgressCount} active...
+                </span>
+              )}
             </div>
 
             {papers.length === 0 ? (
